@@ -91,6 +91,7 @@ BaseNamespace.Game.prototype = {
         box.boxUpdate = function (fallX) {
             if (this.body.right < fallX) {
                 this.body.allowGravity = true;
+                this.body.drag.x = 190;
             }
         };
         box.collides = collides;
