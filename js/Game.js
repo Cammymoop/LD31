@@ -25,7 +25,7 @@ BaseNamespace.Game.prototype = {
         "use strict";
         this.stage.backgroundColor = '#BBBBBB';
         this.physics.startSystem(Phaser.Physics.ARCADE);
-        this.physics.arcade.gravity.y = 950;
+        this.physics.arcade.gravity.y = 900;
 
         this.player = this.game.add.sprite(this.game.world.centerX, 500, 'player');
         this.player.anchor.setTo(0.5, 0.5);
@@ -57,6 +57,25 @@ BaseNamespace.Game.prototype = {
         this.addStack(1500, ['box1', 'box1']);
 		//end of where megan started writing code for boxes
 
+        var addBoxOffset = 1600;
+        var stack = null;
+        var different = {
+            0: ['box1', 'scaffold', 'box1', 'box1'],
+            2: ['box1', 'scaffold', 'box1'],
+            3: ['box1', 'scaffold', 'box1', 'scaffold', 'smallBox'],
+            8: ['box1', 'scaffold', 'smallBox', 'smallScaffold', 'scaffold', 'smallScaffold', 'smallScaffold', 'box1'],
+            9: ['box1', 'scaffold', 'scaffold', 'scaffold', 'box1'],
+        };
+        for (var i = 0; i < 14; i++) {
+            if (i in different) {
+                stack = different[i];
+            } else {
+                stack = ['box1', 'scaffold', 'box1', 'scaffold', 'box1'];
+            }
+            this.addStack(addBoxOffset, stack);
+            addBoxOffset += 40;
+        }
+
         this.frownie = this.game.add.sprite(this.game.world.centerX - 200, this.game.world.centerY, 'frownie');
 
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -70,7 +89,7 @@ BaseNamespace.Game.prototype = {
     addStack: function (x, obstacles) {
         "use strict";
         var y = 540;
-        var heights = {'box1': 80, 'scaffold': 80, 'smallScaffold': 20};
+        var heights = {'box1': 80, 'scaffold': 80, 'smallBox': 20, 'smallScaffold': 20};
         var obs = null;
         var onTop = false;
         for (var i = 0; i < obstacles.length; i++) {
@@ -90,7 +109,7 @@ BaseNamespace.Game.prototype = {
         "use strict";
         image = typeof image !== 'undefined' ? image : 'box1';
 
-        var collides = {'box1': true, 'scaffold': false, 'smallScaffold': false};
+        var collides = {'box1': true, 'smallBox': true, 'scaffold': false, 'smallScaffold': false};
 
         var box = this.game.add.sprite(x, y, image);
         box.anchor.setTo(0.5, 0.5);
@@ -105,6 +124,10 @@ BaseNamespace.Game.prototype = {
             if (this.body.right < fallX) {
                 this.body.allowGravity = true;
                 this.body.drag.x = 190;
+            }
+
+            if (this.y > 650) {
+                this.body.enable = false;
             }
         };
         box.collides = collides[image];
@@ -125,10 +148,6 @@ BaseNamespace.Game.prototype = {
 
         this.boxes.callAll('boxUpdate', null, this.conveyor.body.x);
 
-        for (var i = 0; i < this.conveyorMove.length; i++) {
-            this.conveyorMove[i].body.velocity.x = -90;
-        }
-
 		if (this.cursors.left.isDown)
         {
             player.body.velocity.x -= 150;
@@ -136,6 +155,17 @@ BaseNamespace.Game.prototype = {
         else if (this.cursors.right.isDown)
         {
             player.body.velocity.x += 150;
+        }
+
+        if (player.x > 790 && player.body.velocity.x > 0) {
+            player.body.velocity.x = 0;
+            if (player.body.touching.down) {
+                player.x += 90 * this.time.physicsElapsed;
+            }
+        }
+
+        for (var i = 0; i < this.conveyorMove.length; i++) {
+            this.conveyorMove[i].x += -90 * this.time.physicsElapsed;
         }
 		
         if (this.keys.jump.isDown && player.body.touching.down && this.time.now > this.jumpTime) {
