@@ -39,40 +39,25 @@ BaseNamespace.Game.prototype = {
         this.conveyor.body.immovable = true;
 		
         this.boxes = this.add.group();
-        this.addBox(500, 500);
+        this.addStack(500, ['box1']);
 
-        this.addBox(640, 500);
-        this.addBox(638, 420);
+        this.addStack(640, ['box1', 'box1']);
 
-        this.addBox(840, 500);
-        this.addBox(838, 420);
-        this.addBox(837, 340);
+        this.addStack(840, ['box1', 'box1', 'box1']);
+        this.addStack(880, ['box1']);
 
-        this.addBox(880, 500);
-        this.addBox(950, 250, false, 'smallScaffold');
-        this.addBox(950, 300, false, 'scaffold');
-        this.addBox(950, 350, false, 'smallScaffold');
-        this.addBox(950, 400, false, 'scaffold');
-        this.addBox(950, 450, false, 'smallScaffold');
-        this.addBox(950, 500, false, 'scaffold');
-        this.addBox(950, 200);
+        this.addStack(950, ['scaffold', 'smallScaffold', 'scaffold', 'smallScaffold', 'scaffold', 'smallScaffold', 'box1']);
 
-        this.addBox(1070, 500);
-        this.addBox(1068, 420);
-        this.addBox(1067, 340, false, 'scaffold');
-        this.addBox(1067, 260);
-        this.addBox(1067, 180);
+        this.addStack(1070, ['box1', 'box1', 'scaffold', 'box1', 'box1']);
+        this.addStack(1110, ['box1']);
 
-        this.addBox(1270, 500);
-        this.addBox(1268, 420);
-        this.addBox(1267, 340);
+        this.addStack(1270, ['box1', 'box1', 'box1']);
 		
 		//this is where megan started writing code for boxes
-		this.addBox (1500, 500);
-		this.addBox (1500, 420);
+        this.addStack(1500, ['box1', 'box1']);
 		//end of where megan started writing code for boxes
 
-        this.frownie = this.game.add.sprite(this.game.world.centerX - 100, this.game.world.centerY, 'frownie');
+        this.frownie = this.game.add.sprite(this.game.world.centerX - 200, this.game.world.centerY, 'frownie');
 
         this.cursors = this.input.keyboard.createCursorKeys();
         this.keys = {'jump': this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)};
@@ -82,10 +67,30 @@ BaseNamespace.Game.prototype = {
         this.conveyorMove = [];
 	},
 
-    addBox: function (x, y, collides, image) {
+    addStack: function (x, obstacles) {
         "use strict";
-        collides = typeof collides !== 'undefined' ? collides : true;
+        var y = 540;
+        var heights = {'box1': 80, 'scaffold': 80, 'smallScaffold': 20};
+        var obs = null;
+        var onTop = false;
+        for (var i = 0; i < obstacles.length; i++) {
+            if (i === obstacles.length - 1 || obstacles[i+1] !== 'box1') {
+                onTop = true;
+            } else {
+                onTop = false;
+            }
+            obs = obstacles[i];
+            y -= heights[obs] / 2;
+            this.addBox (x, y, onTop, obs);
+            y -= heights[obs] / 2;
+        }
+    },
+
+    addBox: function (x, y, onTop, image) {
+        "use strict";
         image = typeof image !== 'undefined' ? image : 'box1';
+
+        var collides = {'box1': true, 'scaffold': false, 'smallScaffold': false};
 
         var box = this.game.add.sprite(x, y, image);
         box.anchor.setTo(0.5, 0.5);
@@ -93,13 +98,16 @@ BaseNamespace.Game.prototype = {
         box.body.immovable = true;
         box.body.allowGravity = false;
         box.body.velocity.x = -90;
+        if (!onTop) {
+            box.body.checkCollision.up = false;
+        }
         box.boxUpdate = function (fallX) {
             if (this.body.right < fallX) {
                 this.body.allowGravity = true;
                 this.body.drag.x = 190;
             }
         };
-        box.collides = collides;
+        box.collides = collides[image];
 
         this.boxes.add(box);
     },
