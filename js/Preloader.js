@@ -8,6 +8,7 @@ BaseNamespace.Preloader.prototype = {
 	preload: function () {
         "use strict";
         this.game.load.image('player', 'img/player.png');
+        this.game.load.image('conveyor', 'img/conveyor.png');
 
 	},
 

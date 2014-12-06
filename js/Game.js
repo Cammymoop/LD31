@@ -30,8 +30,13 @@ BaseNamespace.Game.prototype = {
         this.player = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'player');
         this.player.anchor.setTo(0.5, 0.5);
         this.physics.enable(this.player, Phaser.Physics.ARCADE);
+        //this.player.body.collideWorldBounds = true;
 
-        this.player.body.collideWorldBounds = true;
+        this.conveyor = this.game.add.sprite(this.game.world.centerX + 60, 565, 'conveyor');
+        this.conveyor.anchor.setTo(0.5, 0.5);
+        this.physics.enable(this.conveyor, Phaser.Physics.ARCADE);
+        this.conveyor.body.allowGravity = false;
+        this.conveyor.body.immovable = true;
 
         this.cursors = this.input.keyboard.createCursorKeys();
         this.keys = {'jump': this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)};
@@ -39,6 +44,7 @@ BaseNamespace.Game.prototype = {
 
         this.jumpTime = 0;
 
+        this.conveyorMove = [];
 	},
 
 	update: function () {
@@ -55,10 +61,22 @@ BaseNamespace.Game.prototype = {
         {
             player.body.velocity.x = 150;
         }
+        this.conveyorMove = [];
+        this.physics.arcade.collide(player, this.conveyor, this.touchConveyor, null, this);
 
-        if (this.keys.jump.isDown && player.body.onFloor() && this.time.now > this.jumpTime) {
+        for (var i = 0; i < this.conveyorMove.length; i++) {
+            this.conveyorMove[i].body.velocity.x -= 90;
+        }
+
+        if (this.keys.jump.isDown && player.body.touching.down && this.time.now > this.jumpTime) {
             this.jumpTime = this.time.now + 750;
             player.body.velocity.y = - 450;
         }
-	}
+
+	},
+
+    touchConveyor: function (conveyor, obj) {
+        "use strict";
+        this.conveyorMove.push(conveyor);
+    }
 };
