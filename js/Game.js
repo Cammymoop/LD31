@@ -69,8 +69,8 @@ BaseNamespace.Game.prototype = {
 		
 		//this is where megan started writing code for boxes
 		this.addBox (1280, 500);
-		this.addBox (1350, 250);
-		this.addBox (1351, 300);
+		this.addBox (1350, 550);
+		this.addBox (1351, 600);
 		this.addBox (1352, 350);
 		this.addBox (1353, 400);
 		this.addBox (1354, 450);
