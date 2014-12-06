@@ -23,11 +23,42 @@ BaseNamespace.Game = function (game) {
 BaseNamespace.Game.prototype = {
 	create: function () {
         "use strict";
+        this.stage.backgroundColor = '#BBBBBB';
+        this.physics.startSystem(Phaser.Physics.ARCADE);
+        this.physics.arcade.gravity.y = 650;
+
         this.player = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'player');
         this.player.anchor.setTo(0.5, 0.5);
+        this.physics.enable(this.player, Phaser.Physics.ARCADE);
+
+        this.player.body.collideWorldBounds = true;
+
+        this.cursors = this.input.keyboard.createCursorKeys();
+        this.keys = {'jump': this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)};
+        //this.floor = this.game.add.
+
+        this.jumpTime = 0;
+
 	},
 
 	update: function () {
         "use strict";
+        var player = this.player;
+
+        player.body.velocity.x = 0;
+
+        if (this.cursors.left.isDown)
+        {
+            player.body.velocity.x = -150;
+        }
+        else if (this.cursors.right.isDown)
+        {
+            player.body.velocity.x = 150;
+        }
+
+        if (this.keys.jump.isDown && player.body.onFloor() && this.time.now > this.jumpTime) {
+            this.jumpTime = this.time.now + 750;
+            player.body.velocity.y = - 450;
+        }
 	}
 };
