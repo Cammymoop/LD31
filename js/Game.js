@@ -49,10 +49,17 @@ BaseNamespace.Game.prototype = {
         this.addBox(837, 340);
 
         this.addBox(880, 500);
+        this.addBox(950, 250, false, 'smallScaffold');
+        this.addBox(950, 300, false, 'scaffold');
+        this.addBox(950, 350, false, 'smallScaffold');
+        this.addBox(950, 400, false, 'scaffold');
+        this.addBox(950, 450, false, 'smallScaffold');
+        this.addBox(950, 500, false, 'scaffold');
         this.addBox(950, 200);
 
         this.addBox(1070, 500);
         this.addBox(1068, 420);
+        this.addBox(1067, 340, false, 'scaffold');
         this.addBox(1067, 260);
         this.addBox(1067, 180);
 
@@ -70,9 +77,12 @@ BaseNamespace.Game.prototype = {
         this.conveyorMove = [];
 	},
 
-    addBox: function (x, y) {
+    addBox: function (x, y, collides, image) {
         "use strict";
-		var box = this.game.add.sprite(x, y, 'box1');
+        collides = typeof collides !== 'undefined' ? collides : true;
+        image = typeof image !== 'undefined' ? image : 'box1';
+
+        var box = this.game.add.sprite(x, y, image);
         box.anchor.setTo(0.5, 0.5);
         this.physics.enable(box, Phaser.Physics.ARCADE);
         box.body.immovable = true;
@@ -83,6 +93,7 @@ BaseNamespace.Game.prototype = {
                 this.body.allowGravity = true;
             }
         };
+        box.collides = collides;
 
         this.boxes.add(box);
     },
@@ -96,7 +107,7 @@ BaseNamespace.Game.prototype = {
         
         this.conveyorMove = [];
         this.physics.arcade.collide(player, this.conveyor, this.touchConveyor, null, this);
-		this.physics.arcade.collide(player, this.boxes);
+		this.physics.arcade.collide(player, this.boxes, null, this.boxCollideCheck, this);
 
         this.boxes.callAll('boxUpdate', null, this.conveyor.body.x);
 
@@ -119,8 +130,16 @@ BaseNamespace.Game.prototype = {
         }
 	},
 
-    touchConveyor: function (conveyor, obj) {
+    boxCollideCheck: function (player, box) {
         "use strict";
-        this.conveyorMove.push(conveyor);
+        if (!box.collides) {
+            return false;
+        }
+        return true;
+    },
+
+    touchConveyor: function (obj, conveyor) {
+        "use strict";
+        this.conveyorMove.push(obj);
     }
 };
