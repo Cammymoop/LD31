@@ -39,26 +39,26 @@ BaseNamespace.Game.prototype = {
         this.conveyor.body.immovable = true;
 		
         this.boxes = this.add.group();
-        this.addBox(this.game.world.centerX + 100, 500);
+        this.addBox(500, 500);
 
-        this.addBox(this.game.world.centerX + 240, 500);
-        this.addBox(this.game.world.centerX + 238, 420);
+        this.addBox(640, 500);
+        this.addBox(638, 420);
 
-        this.addBox(this.game.world.centerX + 440, 500);
-        this.addBox(this.game.world.centerX + 438, 420);
-        this.addBox(this.game.world.centerX + 437, 340);
+        this.addBox(840, 500);
+        this.addBox(838, 420);
+        this.addBox(837, 340);
 
-        this.addBox(this.game.world.centerX + 480, 500);
-        this.addBox(this.game.world.centerX + 550, 200);
+        this.addBox(880, 500);
+        this.addBox(950, 200);
 
-        this.addBox(this.game.world.centerX + 670, 500);
-        this.addBox(this.game.world.centerX + 668, 420);
-        this.addBox(this.game.world.centerX + 667, 260);
-        this.addBox(this.game.world.centerX + 667, 180);
+        this.addBox(1070, 500);
+        this.addBox(1068, 420);
+        this.addBox(1067, 260);
+        this.addBox(1067, 180);
 
-        this.addBox(this.game.world.centerX + 870, 500);
-        this.addBox(this.game.world.centerX + 868, 420);
-        this.addBox(this.game.world.centerX + 867, 340);
+        this.addBox(1270, 500);
+        this.addBox(1268, 420);
+        this.addBox(1267, 340);
 
         this.frownie = this.game.add.sprite(this.game.world.centerX - 100, this.game.world.centerY, 'frownie');
 
