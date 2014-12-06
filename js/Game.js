@@ -25,11 +25,12 @@ BaseNamespace.Game.prototype = {
         "use strict";
         this.stage.backgroundColor = '#BBBBBB';
         this.physics.startSystem(Phaser.Physics.ARCADE);
-        this.physics.arcade.gravity.y = 650;
+        this.physics.arcade.gravity.y = 950;
 
-        this.player = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'player');
+        this.player = this.game.add.sprite(this.game.world.centerX, 500, 'player');
         this.player.anchor.setTo(0.5, 0.5);
         this.physics.enable(this.player, Phaser.Physics.ARCADE);
+        this.player.body.setSize(30, 62, 0, 9);
 
         this.conveyor = this.game.add.sprite(this.game.world.centerX + 60, 565, 'conveyor');
         this.conveyor.anchor.setTo(0.5, 0.5);
@@ -37,23 +38,54 @@ BaseNamespace.Game.prototype = {
         this.conveyor.body.allowGravity = false;
         this.conveyor.body.immovable = true;
 		
-		this.box1 = this.game.add.sprite(this.game.world.centerX + 80, 500, 'box1');
-        this.box1.anchor.setTo(0.5, 0.5);
-        this.physics.enable(this.box1, Phaser.Physics.ARCADE);
-        this.box1.body.immovable = true;
-        this.box1.body.allowGravity = false;
-        this.box1.body.velocity.x = -90;
+        this.boxes = this.add.group();
+        this.addBox(this.game.world.centerX + 100, 500);
+
+        this.addBox(this.game.world.centerX + 240, 500);
+        this.addBox(this.game.world.centerX + 238, 420);
+
+        this.addBox(this.game.world.centerX + 440, 500);
+        this.addBox(this.game.world.centerX + 438, 420);
+        this.addBox(this.game.world.centerX + 437, 340);
+
+        this.addBox(this.game.world.centerX + 480, 500);
+        this.addBox(this.game.world.centerX + 550, 200);
+
+        this.addBox(this.game.world.centerX + 670, 500);
+        this.addBox(this.game.world.centerX + 668, 420);
+        this.addBox(this.game.world.centerX + 667, 260);
+        this.addBox(this.game.world.centerX + 667, 180);
+
+        this.addBox(this.game.world.centerX + 870, 500);
+        this.addBox(this.game.world.centerX + 868, 420);
+        this.addBox(this.game.world.centerX + 867, 340);
 
         this.frownie = this.game.add.sprite(this.game.world.centerX - 100, this.game.world.centerY, 'frownie');
 
         this.cursors = this.input.keyboard.createCursorKeys();
         this.keys = {'jump': this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)};
-        //this.floor = this.game.add.
 
         this.jumpTime = 0;
 
         this.conveyorMove = [];
 	},
+
+    addBox: function (x, y) {
+        "use strict";
+		var box = this.game.add.sprite(x, y, 'box1');
+        box.anchor.setTo(0.5, 0.5);
+        this.physics.enable(box, Phaser.Physics.ARCADE);
+        box.body.immovable = true;
+        box.body.allowGravity = false;
+        box.body.velocity.x = -90;
+        box.boxUpdate = function (fallX) {
+            if (this.body.right < fallX) {
+                this.body.allowGravity = true;
+            }
+        };
+
+        this.boxes.add(box);
+    },
 
 	update: function () {
         "use strict";
@@ -64,11 +96,9 @@ BaseNamespace.Game.prototype = {
         
         this.conveyorMove = [];
         this.physics.arcade.collide(player, this.conveyor, this.touchConveyor, null, this);
-		this.physics.arcade.collide(player, this.box1);
+		this.physics.arcade.collide(player, this.boxes);
 
-        if (this.box1.body.right < this.conveyor.body.x) {
-            this.box1.body.allowGravity = true;
-        }
+        this.boxes.callAll('boxUpdate', null, this.conveyor.body.x);
 
         for (var i = 0; i < this.conveyorMove.length; i++) {
             this.conveyorMove[i].body.velocity.x = -90;
@@ -84,10 +114,9 @@ BaseNamespace.Game.prototype = {
         }
 		
         if (this.keys.jump.isDown && player.body.touching.down && this.time.now > this.jumpTime) {
-            this.jumpTime = this.time.now + 750;
+            this.jumpTime = this.time.now + 250;
             player.body.velocity.y = - 450;
         }
-
 	},
 
     touchConveyor: function (conveyor, obj) {
