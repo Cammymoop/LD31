@@ -61,7 +61,7 @@ BaseNamespace.Game.prototype = {
         this.conveyorMove = [];
         this.physics.arcade.collide(player, this.conveyor, this.touchConveyor, null, this);
 		this.physics.arcade.collide(this.box1, this.conveyor, this.touchConveyor, null, this);
-		this.physics.arcade.collide(player, this.box1, this.conveyor, null, this);
+		this.physics.arcade.collide(player, this.box1);
 
         for (var i = 0; i < this.conveyorMove.length; i++) {
             this.conveyorMove[i].body.velocity.x = - 90;
