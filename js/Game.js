@@ -68,8 +68,7 @@ BaseNamespace.Game.prototype = {
         this.addBox(1267, 340);
 		
 		//this is where megan started writing code for boxes
-		this.addBox (1280, 500);
-		this.addBox (1280, 1000);
+		this.addBox (1500, 500);
 		//end of where megan started writing code for boxes
 
         this.frownie = this.game.add.sprite(this.game.world.centerX - 100, this.game.world.centerY, 'frownie');
