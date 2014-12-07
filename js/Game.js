@@ -84,27 +84,27 @@ BaseNamespace.Game.prototype = {
 		
 		addBoxOffset = 2600
 		this.addStack (addBoxOffset, ['smallBox']);
-		addBoxOffset += 120;
+		addBoxOffset += 40;
 		this.addStack (addBoxOffset, ['smallBox']);
-		addBoxOffset += 160;
+		addBoxOffset += 40;
 		this.addStack (addBoxOffset, ['smallBox', 'scaffold', 'box1']);
 		this.addCoin (addBoxOffset, 340);
-		addBoxOffset += 240;
+		addBoxOffset += 40;
 		this.addStack (addBoxOffset, ['smallBox']);
-		addBoxOffset += 320;
+		addBoxOffset += 40;
 		this.addStack (addBoxOffset, ['smallBox']);
-		addBoxOffset += 400;
+		addBoxOffset += 40;
 		this.addStack (addBoxOffset, ['smallBox', 'scaffold', 'box1']);
 		this.addCoin (addBoxOffset, 580);
-		addBoxOffset += 480;
+		addBoxOffset += 40;
 		this.addStack (addBoxOffset, ['smallBox']);
-		addBoxOffset += 560;
+		addBoxOffset += 40;
 		this.addStack (addBoxOffset, ['smallBox', 'box1']);
-		addBoxOffset += 640;
+		addBoxOffset += 40;
 		this.addStack (addBoxOffset, ['smallBox']);
 		this.addCoin (addBoxOffset, 660);
 		this.addCoin (addBoxOffset, 700);
-		addBoxOffset += 720;
+		addBoxOffset += 40;
 		this.addStack (addBoxOffset, ['smallBox', 'box1', 'box1']);
 		this.addCoin (addBoxOffset, 900);
 		this.addCoin (addBoxOffset, 940);
