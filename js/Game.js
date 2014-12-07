@@ -69,7 +69,6 @@ BaseNamespace.Game.prototype = {
 		this.addStack (addBoxOffset, ['box1', 'scaffold', 'smallBox']);
 		this.addStack (addBoxOffset + 120, ['smallBox', 'smallBox', 'smallBox']);
 		this.addStack (addBoxOffset + 160, ['smallBox', 'smallScaffold', 'smallScaffold', 'smallBox']);
-		this.addStack (addBoxOffset + 200, ['box1', 'smallBox', 'scaffold', 'scaffold', 'box1']);
 		this.addStack (addBoxOffset + 240, ['smallBox', 'scaffold', 'box1', 'box1', 'box1',]);
 		//end of trial code
 	
