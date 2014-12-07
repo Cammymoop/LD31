@@ -25,7 +25,7 @@ BaseNamespace.Game.prototype = {
         "use strict";
         this.stage.backgroundColor = '#BBBBBB';
         this.physics.startSystem(Phaser.Physics.ARCADE);
-        this.physics.arcade.gravity.y = 900;
+        this.physics.arcade.gravity.y = 1400;
 
         this.boxes = this.add.group();
         this.enemyBuffer = this.add.group();
@@ -253,11 +253,11 @@ BaseNamespace.Game.prototype = {
 
 		if (this.cursors.left.isDown)
         {
-            player.body.velocity.x -= 160;
+            player.body.velocity.x -= 190;
         }
         else if (this.cursors.right.isDown)
         {
-            player.body.velocity.x += 160;
+            player.body.velocity.x += 190;
         }
 
         if (player.x > 790 && player.body.velocity.x > 0) {
@@ -277,7 +277,7 @@ BaseNamespace.Game.prototype = {
 		
         if (this.keys.jump.isDown && player.body.touching.down && this.time.now > this.jumpTime) {
             this.jumpTime = this.time.now + 250;
-            player.body.velocity.y = - 450;
+            player.body.velocity.y = - 550;
         }
 
         if (player.y > 800) {
