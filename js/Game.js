@@ -36,7 +36,7 @@ BaseNamespace.Game.prototype = {
         this.player = this.game.add.sprite(400, 500, 'player');
         this.player.anchor.setTo(0.5, 0.5);
         this.physics.enable(this.player, Phaser.Physics.ARCADE);
-        this.player.body.setSize(26, 62, 0, 9);
+        this.player.body.setSize(26, 59, 0, 10);
         this.player.velocityControl = true;
 
         this.score = 0;
@@ -73,6 +73,36 @@ BaseNamespace.Game.prototype = {
         this.addStack(1270, ['box1', 'box1', 'box1']);
 		
 		this.addStack(1350, ['box1', 'box1', 'box1']);
+	
+        var addBoxOffset = 1600;
+        var stack = null;
+        var different = {
+            0: ['box1', 'scaffold', 'box1', 'box1'],
+            2: ['box1', 'scaffold', 'box1'],
+            3: ['box1', 'scaffold', 'box1', 'scaffold', 'smallBox'],
+            8: ['box1', 'scaffold', 'smallBox', 'smallScaffold', 'scaffold', 'smallScaffold', 'smallScaffold', 'box1'],
+            9: ['box1', 'scaffold', 'scaffold', 'scaffold', 'box1'],
+        };
+        for (var i = 0; i < 14; i++) {
+            if (i in different) {
+                stack = different[i];
+            } else {
+                stack = ['box1', 'scaffold', 'box1', 'scaffold', 'box1'];
+            }
+            this.addStack(addBoxOffset, stack);
+            if (i > 1) {
+                this.addCoin(addBoxOffset, 90);
+            }
+            if (i === 10) {
+                this.addCoin(addBoxOffset, 240);
+            }
+            addBoxOffset += 40;
+        }
+
+        this.addStack(addBoxOffset + 120, ['box1']);
+        this.addFrownie(addBoxOffset + 200, 507);
+        this.addStack(addBoxOffset + 480, ['box1', 'box1']);
+        this.addCoin(addBoxOffset + 680, 260);
 		
 		//megan's trial code
 		addBoxOffset = 2000;
@@ -113,38 +143,45 @@ BaseNamespace.Game.prototype = {
 		this.addStack (addBoxOffset + 240, ['smallBox', 'scaffold', 'box1', 'box1']);
 
 		//end of trial code
-	
-        var addBoxOffset = 1600;
-        var stack = null;
-        var different = {
-            0: ['box1', 'scaffold', 'box1', 'box1'],
-            2: ['box1', 'scaffold', 'box1'],
-            3: ['box1', 'scaffold', 'box1', 'scaffold', 'smallBox'],
-            8: ['box1', 'scaffold', 'smallBox', 'smallScaffold', 'scaffold', 'smallScaffold', 'smallScaffold', 'box1'],
-            9: ['box1', 'scaffold', 'scaffold', 'scaffold', 'box1'],
-        };
-        for (var i = 0; i < 14; i++) {
-            if (i in different) {
-                stack = different[i];
-            } else {
-                stack = ['box1', 'scaffold', 'box1', 'scaffold', 'box1'];
-            }
-            this.addStack(addBoxOffset, stack);
-            if (i > 1) {
-                this.addCoin(addBoxOffset, 90);
-            }
-            if (i === 10) {
-                this.addCoin(addBoxOffset, 240);
-            }
+
+        addBoxOffset += 900;
+        this.addCoin(addBoxOffset, 500);
+        addBoxOffset += 80;
+        this.addStack(addBoxOffset, ['smallBox']);
+        addBoxOffset += 40;
+        this.addStack(addBoxOffset, ['smallBox', 'smallBox']);
+        addBoxOffset += 40;
+        this.addStack(addBoxOffset, ['smallBox', 'smallBox', 'smallBox']);
+        for (var i2 = 0; i2 < 6; i2++) {
             addBoxOffset += 40;
+            this.addStack(addBoxOffset, ['smallScaffold', 'smallScaffold', 'smallScaffold', 'smallBox']);
+            if (!i2) {
+                this.addCoin(addBoxOffset, 500);
+            }
         }
+        addBoxOffset += 40;
+        this.addStack(addBoxOffset, ['smallScaffold', 'smallScaffold', 'smallScaffold', 'smallBox', 'scaffold', 'smallBox']);
+        this.addCoin(addBoxOffset, 200);
 
-        this.addStack(addBoxOffset + 120, ['box1']);
-        this.addFrownie(addBoxOffset + 200, 507);
-        this.addStack(addBoxOffset + 480, ['box1', 'box1']);
-        this.addCoin(addBoxOffset + 680, 260);
+        addBoxOffset += 280;
+        this.addStack(addBoxOffset, ['smallScaffold', 'smallScaffold', 'smallScaffold', 'smallBox', 'box1', 'box1', 'box1']);
+        addBoxOffset += 40;
+        this.addStack(addBoxOffset, ['smallScaffold', 'smallScaffold', 'smallScaffold', 'smallBox', 'scaffold', 'smallBox']);
+        this.addCoin(addBoxOffset, 280);
+        addBoxOffset += 40;
+        this.addStack(addBoxOffset, ['smallScaffold', 'smallScaffold', 'smallScaffold', 'smallBox']);
+        addBoxOffset += 40;
+        this.addStack(addBoxOffset, ['smallScaffold', 'smallScaffold', 'smallScaffold', 'smallBox']);
 
-        this.addCoin(addBoxOffset + 1200, 500);
+        addBoxOffset += 180;
+        this.addStack(addBoxOffset, ['scaffold', 'scaffold', 'smallBox']);
+        this.addCoin(addBoxOffset, 280);
+        this.addFrownie(addBoxOffset, 507, 'left');
+        this.addStack(addBoxOffset - 70, ['smallBox']);
+
+        addBoxOffset += 220;
+        this.addStack(addBoxOffset, ['scaffold', 'scaffold', 'smallBox']);
+        this.addCoin(addBoxOffset, 280);
 
         this.addCoin(122, 28, false);
         this.addCoin(765, 500, false);
@@ -198,10 +235,10 @@ BaseNamespace.Game.prototype = {
         this.coins.add(coin);
     },
 
-    addFrownie: function (x, y, image, facing) {
+    addFrownie: function (x, y, facing, image) {
         "use strict";
-        image = typeof image !== 'undefined' ? image : 'frownie';
         facing = typeof facing !== 'undefined' ? facing : 'right';
+        image = typeof image !== 'undefined' ? image : 'frownie';
 
         var frownie = this.game.add.sprite(x, y, image);
         frownie.anchor.setTo(0.5, 0.5);
@@ -214,7 +251,7 @@ BaseNamespace.Game.prototype = {
         frownie.facing = facing;
 
         frownie.enemyUpdate = function (game) {
-            if (this.body.x < 750) {
+            if (this.body.x < 770) {
                 game.enemyBuffer.remove(this);
                 game.enemies.add(this);
 
