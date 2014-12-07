@@ -126,7 +126,7 @@ BaseNamespace.Game.prototype = {
 		this.addStack (addBoxOffset, ['smallBox']);
 		addBoxOffset += 40;
 		this.addStack (addBoxOffset, ['smallBox', 'scaffold', 'box1']);
-		this.addCoin (addBoxOffset, 500);
+		this.addCoin (addBoxOffset, 580);
 		addBoxOffset += 40;
 		this.addStack (addBoxOffset, ['smallBox']);
 		addBoxOffset += 40;
