@@ -42,6 +42,8 @@ BaseNamespace.Game.prototype = {
         this.player.health = 3;
         this.player.invincible = false;
         this.player.lastHit = 0;
+        this.player.blinkTime = 0;
+        this.player.blinkInterval = 60;
 
         this.score = 0;
         this.scoreText = this.add.text(32, 18, 'Score: 0', {font: "18pt Sans", fill: "#000000"});
@@ -51,6 +53,7 @@ BaseNamespace.Game.prototype = {
         this.gameOverText.visible = false;
 
         this.coinSound = this.add.audio('coinSFX');
+        this.hurtSound = this.add.audio('hurtSFX');
 
         this.conveyor = this.game.add.sprite(this.game.world.centerX + 60, 565, 'conveyor');
         this.conveyor.anchor.setTo(0.5, 0.5);
@@ -377,6 +380,18 @@ BaseNamespace.Game.prototype = {
             if (player.health < 1) {
                 this.die();
             }
+
+            if (player.invincible) {
+                if (this.time.now - player.blinkInterval > player.blinkTime) {
+                    player.visible = player.visible ? false : true;
+                    player.blinkTime = this.time.now;
+                }
+
+                if (this.time.now - 1200 > player.lastHit) {
+                    player.invincible = false;
+                    player.visible = true;
+                }
+            }
         }
 
         this.conveyorMove = [];
@@ -395,10 +410,6 @@ BaseNamespace.Game.prototype = {
         var en = this.enemyBuffer.children.length;
         while (en--) {
             this.enemyBuffer.children[en].enemyUpdate(this);
-        }
-
-        if (player.invincible && this.time.now - 560 > player.lastHit) {
-            player.invincible = false;
         }
 
         if (player.exists) {
@@ -424,7 +435,8 @@ BaseNamespace.Game.prototype = {
             }
 
             if (player.y > 800) {
-                this.gameOver();
+                this.hurtSound.play()
+                this.die();
             }
         }
 
@@ -456,11 +468,14 @@ BaseNamespace.Game.prototype = {
         this.hearts[this.player.health].visible = false;
         this.player.lastHit = this.time.now;
         this.player.invincible = true;
+        this.player.body.velocity.y = -100;
+        this.hurtSound.play();
     },
 
     die: function () {
         "use strict";
         this.player.exists = false;
+        this.player.invincible = false;
         this.gameOver();
     },
 
