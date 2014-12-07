@@ -40,6 +40,10 @@ BaseNamespace.Game.prototype = {
         this.coins = this.add.group();
         this.score = 0;
         this.scoreText = this.add.text(32, 18, 'Score: 0', {font: "18pt Sans", fill: "#000000"});
+        this.gameOverText = this.add.text(400, 300, '    Game Over\npress R to restart', {font: "30pt Georgia, Ariel", fill: "#900000", stroke: "#300000", strokeThickness: 5});
+        this.gameOverText.x -= Math.round(this.gameOverText.width/2);
+        this.gameOverText.y -= Math.round(this.gameOverText.height/2);
+        this.gameOverText.visible = false;
 
         this.coinSound = this.add.audio('coinSFX');
 
@@ -110,7 +114,7 @@ BaseNamespace.Game.prototype = {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.keys = {
             'jump': this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
-            'h': this.input.keyboard.addKey(Phaser.Keyboard.H)
+            'R': this.input.keyboard.addKey(Phaser.Keyboard.R)
         };
 
         this.jumpTime = 0;
@@ -275,6 +279,14 @@ BaseNamespace.Game.prototype = {
             this.jumpTime = this.time.now + 250;
             player.body.velocity.y = - 450;
         }
+
+        if (player.y > 800) {
+            this.gameOver();
+        }
+
+        if (this.keys.R.isDown) {
+            this.reset();
+        }
 	},
 
     coinGrab: function (player, coin) {
@@ -295,5 +307,15 @@ BaseNamespace.Game.prototype = {
     touchConveyor: function (conveyor, obj) {
         "use strict";
         this.conveyorMove.push(obj);
+    },
+
+    reset: function () {
+        "use strict";
+        this.game.state.start('Game');
+    },
+
+    gameOver: function () {
+        "use strict";
+        this.gameOverText.visible = true;
     }
 };
