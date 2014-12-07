@@ -62,6 +62,8 @@ BaseNamespace.Game.prototype = {
 
         this.addStack(1270, ['box1', 'box1', 'box1']);
 		
+		this.addStack(1300, ['box1', 'box1', 'box1']);
+		
         var addBoxOffset = 1600;
         var stack = null;
         var different = {
