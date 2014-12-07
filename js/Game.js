@@ -37,6 +37,10 @@ BaseNamespace.Game.prototype = {
         this.player.body.setSize(30, 62, 0, 9);
         this.player.velocityControl = true;
 
+        this.coins = this.add.group();
+        this.score = 0;
+        this.scoreText = this.add.text(32, 18, 'Score: 0', {font: "18pt Sans", fill: "#000000"});
+
         //this.frownie = this.game.add.sprite(690, 500, 'frownie');
         //this.frownie.anchor.setTo(0.5, 0.5);
         //this.physics.enable(this.frownie, Phaser.Physics.ARCADE);
@@ -51,6 +55,8 @@ BaseNamespace.Game.prototype = {
 
         this.addStack(640, ['box1', 'box1']);
         this.addFrownie(720, 507);
+
+        this.addCoin(740, 260);
 
         this.addStack(840, ['box1', 'box1', 'box1']);
         this.addStack(880, ['box1']);
@@ -123,6 +129,23 @@ BaseNamespace.Game.prototype = {
             this.addBox (x, y, onTop, obs);
             y -= heights[obs] / 2;
         }
+    },
+
+    addCoin: function (x, y, moves) {
+        "use strict";
+        moves = typeof moves !== 'undefined' ? moves : true;
+        var coin = this.game.add.sprite(x, y, 'coin');
+        coin.anchor.setTo(0.5, 0.5);
+        this.physics.enable(coin, Phaser.Physics.ARCADE);
+        coin.body.allowGravity = false;
+        if (moves) {
+            coin.body.velocity.x = -90;
+        }
+
+        coin.coinUpdate = function () {
+        };
+
+        this.coins.add(coin);
     },
 
     addFrownie: function (x, y, image, facing) {
@@ -200,6 +223,7 @@ BaseNamespace.Game.prototype = {
 
         player.body.velocity.x = 0;
 
+        this.scoreText.setText('Score: ' + this.score);
         
         this.conveyorMove = [];
         this.physics.arcade.collide(this.conveyor, player, this.touchConveyor, null, this);
@@ -207,6 +231,8 @@ BaseNamespace.Game.prototype = {
 		this.physics.arcade.collide(player, this.boxes, null, this.boxCollideCheck, this);
 		this.physics.arcade.collide(player, this.enemies);
 		this.physics.arcade.collide(this.enemies, this.boxes, null, this.boxCollideCheck, this);
+
+		this.physics.arcade.overlap(player, this.coins, this.coinGrab, null, this);
 
         this.boxes.callAll('boxUpdate', null, this.conveyor.body.x);
         this.enemies.callAll('enemyUpdate', null, this);
@@ -244,6 +270,12 @@ BaseNamespace.Game.prototype = {
             player.body.velocity.y = - 450;
         }
 	},
+
+    coinGrab: function (player, coin) {
+        "use strict";
+        coin.exists = false;
+        this.score++;
+    },
 
     boxCollideCheck: function (player, box) {
         "use strict";
