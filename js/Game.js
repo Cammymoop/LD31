@@ -25,6 +25,7 @@ BaseNamespace.Game.prototype = {
         "use strict";
         this.DEBUG_MODE = true;
         this.stage.backgroundColor = '#BBBBBB';
+        this.add.sprite(0, 0, 'background');
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.physics.arcade.gravity.y = 1400;
 
