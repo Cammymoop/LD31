@@ -23,6 +23,7 @@ BaseNamespace.Game = function (game) {
 BaseNamespace.Game.prototype = {
 	create: function () {
         "use strict";
+        this.DEBUG_MODE = true;
         this.stage.backgroundColor = '#BBBBBB';
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.physics.arcade.gravity.y = 1400;
@@ -78,7 +79,7 @@ BaseNamespace.Game.prototype = {
 		this.addStack (addBoxOffset, ['box1', 'scaffold', 'smallBox']);
 		this.addStack (addBoxOffset + 120, ['smallBox', 'smallBox', 'smallBox']);
 		this.addStack (addBoxOffset + 160, ['smallBox', 'smallScaffold', 'smallScaffold', 'smallBox']);
-		this.addStack (addBoxOffset + 240, ['smallBox', 'scaffold', 'box1', 'box1', 'box1',]);
+		this.addStack (addBoxOffset + 240, ['smallBox', 'scaffold', 'box1', 'box1',]);
 		//end of trial code
 	
         var addBoxOffset = 1600;
@@ -120,6 +121,7 @@ BaseNamespace.Game.prototype = {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.keys = {
             'jump': this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
+            'C': this.input.keyboard.addKey(Phaser.Keyboard.C),
             'R': this.input.keyboard.addKey(Phaser.Keyboard.R)
         };
 
@@ -244,7 +246,9 @@ BaseNamespace.Game.prototype = {
         this.conveyorMove = [];
         this.physics.arcade.collide(this.conveyor, player, this.touchConveyor, null, this);
         this.physics.arcade.collide(this.conveyor, this.enemies, this.touchConveyor, null, this);
-		this.physics.arcade.collide(player, this.boxes, null, this.boxCollideCheck, this);
+        if (!this.DEBUG_MODE || !this.keys.C.isDown) {
+            this.physics.arcade.collide(player, this.boxes, null, this.boxCollideCheck, this);
+        }
 		this.physics.arcade.collide(player, this.enemies);
 		this.physics.arcade.collide(this.enemies, this.boxes, null, this.boxCollideCheck, this);
 
