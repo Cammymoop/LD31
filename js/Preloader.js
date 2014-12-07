@@ -13,9 +13,12 @@ BaseNamespace.Preloader.prototype = {
         this.game.load.image('smallBox', 'img/boxSmall.png');
         this.game.load.image('scaffold', 'img/scaffold.png');
         this.game.load.image('smallScaffold', 'img/smallScaffold.png');
+
         this.game.load.image('frownie', 'img/frownie.png');
+        this.game.load.image('starball', 'img/starball.png');
 
         this.game.load.image('coin', 'img/coin.png');
+        this.game.load.image('heart', 'img/heart.png');
 
         this.game.load.audio('coinSFX', ['sfx/coin.mp3', 'sfx/coin.ogg']);
 	},

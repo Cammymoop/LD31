@@ -39,6 +39,10 @@ BaseNamespace.Game.prototype = {
         this.player.body.setSize(26, 59, 0, 10);
         this.player.velocityControl = true;
 
+        this.player.health = 3;
+        this.player.invincible = false;
+        this.player.lastHit = 0;
+
         this.score = 0;
         this.scoreText = this.add.text(32, 18, 'Score: 0', {font: "18pt Sans", fill: "#000000"});
         this.gameOverText = this.add.text(400, 300, '    Game Over\npress R to restart', {font: "30pt Georgia, Ariel", fill: "#900000", stroke: "#300000", strokeThickness: 5});
@@ -71,7 +75,9 @@ BaseNamespace.Game.prototype = {
         this.addStack(1110, ['box1']);
 
         this.addStack(1270, ['box1', 'box1', 'box1']);
-		
+        this.addStarball(1310, 492);
+        this.addStarball(1310, 450);
+        this.addStarball(1310, 408);
 		this.addStack(1350, ['box1', 'box1', 'box1']);
 	
         var addBoxOffset = 1600;
@@ -223,6 +229,12 @@ BaseNamespace.Game.prototype = {
             'R': this.input.keyboard.addKey(Phaser.Keyboard.R)
         };
 
+        this.hearts = [];
+        for (var h = 0; h < 3; h++) {
+            this.hearts.push(this.add.sprite(768 - (46 * h), 32, 'heart'));
+            this.hearts[h].anchor.setTo(0.5, 0.5);
+        }
+
         this.jumpTime = 0;
 
         this.conveyorMove = [];
@@ -247,6 +259,27 @@ BaseNamespace.Game.prototype = {
         }
     },
 
+    addStarball: function (x, y) {
+        "use strict";
+        var starball = this.game.add.sprite(x, y, 'starball');
+        starball.anchor.setTo(0.5, 0.5);
+        this.physics.enable(starball, Phaser.Physics.ARCADE);
+        starball.body.setSize(20, 20);
+        starball.body.immovable = true;
+        starball.body.allowGravity = false;
+        starball.body.velocity.x = -90;
+        var posNeg = [-1, 1];
+        starball.spin = Math.round((Math.random() * 3) + 2) * posNeg[Math.round(Math.random())];
+
+        starball.type = 'starball';
+
+        starball.enemyUpdate = function (game) {
+            this.angle += this.spin;
+        };
+
+        this.enemies.add(starball);
+    },
+
     addCoin: function (x, y, moves) {
         "use strict";
         moves = typeof moves !== 'undefined' ? moves : true;
@@ -257,9 +290,6 @@ BaseNamespace.Game.prototype = {
         if (moves) {
             coin.body.velocity.x = -90;
         }
-
-        coin.coinUpdate = function () {
-        };
 
         this.coins.add(coin);
     },
@@ -278,6 +308,8 @@ BaseNamespace.Game.prototype = {
 
         frownie.active = false;
         frownie.facing = facing;
+
+        frownie.type = 'frownie';
 
         frownie.enemyUpdate = function (game) {
             if (this.body.x < 770) {
@@ -337,20 +369,26 @@ BaseNamespace.Game.prototype = {
         "use strict";
         var player = this.player;
 
-        player.body.velocity.x = 0;
+        if (player.exists) {
+            player.body.velocity.x = 0;
 
-        this.scoreText.setText('Score: ' + this.score);
-        
+            this.scoreText.setText('Score: ' + this.score);
+
+            if (player.health < 1) {
+                this.die();
+            }
+        }
+
         this.conveyorMove = [];
         this.physics.arcade.collide(this.conveyor, player, this.touchConveyor, null, this);
         this.physics.arcade.collide(this.conveyor, this.enemies, this.touchConveyor, null, this);
         if (!this.DEBUG_MODE || !this.keys.C.isDown) {
             this.physics.arcade.collide(player, this.boxes, null, this.boxCollideCheck, this);
         }
-		this.physics.arcade.collide(player, this.enemies);
-		this.physics.arcade.collide(this.enemies, this.boxes, null, this.boxCollideCheck, this);
+        this.physics.arcade.collide(player, this.enemies, this.enemyCollide, null, this);
+        this.physics.arcade.collide(this.enemies, this.boxes, null, this.boxCollideCheck, this);
 
-		this.physics.arcade.overlap(player, this.coins, this.coinGrab, null, this);
+        this.physics.arcade.overlap(player, this.coins, this.coinGrab, null, this);
 
         this.boxes.callAll('boxUpdate', null, this.conveyor.body.x);
         this.enemies.callAll('enemyUpdate', null, this);
@@ -359,19 +397,34 @@ BaseNamespace.Game.prototype = {
             this.enemyBuffer.children[en].enemyUpdate(this);
         }
 
-		if (this.cursors.left.isDown)
-        {
-            player.body.velocity.x -= 190;
-        }
-        else if (this.cursors.right.isDown)
-        {
-            player.body.velocity.x += 190;
+        if (player.invincible && this.time.now - 560 > player.lastHit) {
+            player.invincible = false;
         }
 
-        if (player.x > 790 && player.body.velocity.x > 0) {
-            player.body.velocity.x = 0;
-            if (player.body.touching.down) {
-                player.body.velocity.x = 90;
+        if (player.exists) {
+            if (this.cursors.left.isDown)
+            {
+                player.body.velocity.x -= 190;
+            }
+            else if (this.cursors.right.isDown)
+            {
+                player.body.velocity.x += 190;
+            }
+
+            if (player.x > 790 && player.body.velocity.x > 0) {
+                player.body.velocity.x = 0;
+                if (player.body.touching.down) {
+                    player.body.velocity.x = 90;
+                }
+            }
+
+            if (this.keys.jump.isDown && player.body.touching.down && this.time.now > this.jumpTime) {
+                this.jumpTime = this.time.now + 250;
+                player.body.velocity.y = - 550;
+            }
+
+            if (player.y > 800) {
+                this.gameOver();
             }
         }
 
@@ -382,20 +435,34 @@ BaseNamespace.Game.prototype = {
                 this.conveyorMove[i].body.velocity.x = -90;
             }
         }
-		
-        if (this.keys.jump.isDown && player.body.touching.down && this.time.now > this.jumpTime) {
-            this.jumpTime = this.time.now + 250;
-            player.body.velocity.y = - 550;
-        }
-
-        if (player.y > 800) {
-            this.gameOver();
-        }
 
         if (this.keys.R.isDown) {
             this.reset();
         }
 	},
+
+    enemyCollide: function (player, enemy) {
+        "use strict";
+        if (enemy.type === 'starball') {
+            if (!player.invincible) {
+                this.getHit();
+            }
+        }
+    },
+
+    getHit: function () {
+        "use strict";
+        this.player.health--;
+        this.hearts[this.player.health].visible = false;
+        this.player.lastHit = this.time.now;
+        this.player.invincible = true;
+    },
+
+    die: function () {
+        "use strict";
+        this.player.exists = false;
+        this.gameOver();
+    },
 
     coinGrab: function (player, coin) {
         "use strict";
