@@ -27,6 +27,7 @@ BaseNamespace.Game.prototype = {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.physics.arcade.gravity.y = 1400;
 
+        this.coins = this.add.group();
         this.boxes = this.add.group();
         this.enemyBuffer = this.add.group();
         this.enemies = this.add.group();
@@ -34,10 +35,9 @@ BaseNamespace.Game.prototype = {
         this.player = this.game.add.sprite(400, 500, 'player');
         this.player.anchor.setTo(0.5, 0.5);
         this.physics.enable(this.player, Phaser.Physics.ARCADE);
-        this.player.body.setSize(30, 62, 0, 9);
+        this.player.body.setSize(26, 62, 0, 9);
         this.player.velocityControl = true;
 
-        this.coins = this.add.group();
         this.score = 0;
         this.scoreText = this.add.text(32, 18, 'Score: 0', {font: "18pt Sans", fill: "#000000"});
         this.gameOverText = this.add.text(400, 300, '    Game Over\npress R to restart', {font: "30pt Georgia, Ariel", fill: "#900000", stroke: "#300000", strokeThickness: 5});
@@ -46,10 +46,6 @@ BaseNamespace.Game.prototype = {
         this.gameOverText.visible = false;
 
         this.coinSound = this.add.audio('coinSFX');
-
-        //this.frownie = this.game.add.sprite(690, 500, 'frownie');
-        //this.frownie.anchor.setTo(0.5, 0.5);
-        //this.physics.enable(this.frownie, Phaser.Physics.ARCADE);
 
         this.conveyor = this.game.add.sprite(this.game.world.centerX + 60, 565, 'conveyor');
         this.conveyor.anchor.setTo(0.5, 0.5);
@@ -61,6 +57,7 @@ BaseNamespace.Game.prototype = {
 
         this.addStack(640, ['box1', 'box1']);
         this.addFrownie(720, 507);
+        this.addCoin(780, 500);
 
         this.addCoin(740, 260);
 
@@ -103,15 +100,22 @@ BaseNamespace.Game.prototype = {
             if (i > 1) {
                 this.addCoin(addBoxOffset, 90);
             }
+            if (i === 10) {
+                this.addCoin(addBoxOffset, 240);
+            }
             addBoxOffset += 40;
         }
 
         this.addStack(addBoxOffset + 120, ['box1']);
         this.addFrownie(addBoxOffset + 200, 507);
         this.addStack(addBoxOffset + 480, ['box1', 'box1']);
-        this.addCoin(addBoxOffset + 480, 290);
+        this.addCoin(addBoxOffset + 680, 260);
+
+        this.addCoin(addBoxOffset + 1200, 500);
 
         this.addCoin(122, 28, false);
+        this.addCoin(765, 500, false);
+        this.addCoin(765, 200, false);
 
         this.cursors = this.input.keyboard.createCursorKeys();
         this.keys = {
