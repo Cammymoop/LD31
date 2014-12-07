@@ -96,12 +96,16 @@ BaseNamespace.Game.prototype = {
                 stack = ['box1', 'scaffold', 'box1', 'scaffold', 'box1'];
             }
             this.addStack(addBoxOffset, stack);
+            if (i > 1) {
+                this.addCoin(addBoxOffset, 90);
+            }
             addBoxOffset += 40;
         }
 
         this.addStack(addBoxOffset + 120, ['box1']);
         this.addFrownie(addBoxOffset + 200, 507);
         this.addStack(addBoxOffset + 480, ['box1', 'box1']);
+        this.addCoin(addBoxOffset + 480, 290);
 
         this.cursors = this.input.keyboard.createCursorKeys();
         this.keys = {
