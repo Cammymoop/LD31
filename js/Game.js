@@ -41,6 +41,8 @@ BaseNamespace.Game.prototype = {
         this.score = 0;
         this.scoreText = this.add.text(32, 18, 'Score: 0', {font: "18pt Sans", fill: "#000000"});
 
+        this.coinSound = this.add.audio('coinSFX');
+
         //this.frownie = this.game.add.sprite(690, 500, 'frownie');
         //this.frownie.anchor.setTo(0.5, 0.5);
         //this.physics.enable(this.frownie, Phaser.Physics.ARCADE);
@@ -275,6 +277,7 @@ BaseNamespace.Game.prototype = {
         "use strict";
         coin.exists = false;
         this.score++;
+        this.coinSound.play();
     },
 
     boxCollideCheck: function (player, box) {
