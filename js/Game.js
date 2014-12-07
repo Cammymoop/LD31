@@ -111,6 +111,8 @@ BaseNamespace.Game.prototype = {
         this.addStack(addBoxOffset + 480, ['box1', 'box1']);
         this.addCoin(addBoxOffset + 480, 290);
 
+        this.addCoin(122, 28, false);
+
         this.cursors = this.input.keyboard.createCursorKeys();
         this.keys = {
             'jump': this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
