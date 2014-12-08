@@ -29,7 +29,6 @@ BaseNamespace.Game.prototype = {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.physics.arcade.gravity.y = 1400;
 
-
         this.music = this.add.audio('bgMusic', 1, true);
         this.music.play('', 0, 0.8, true);
 
@@ -37,8 +36,6 @@ BaseNamespace.Game.prototype = {
         this.muteToggle = 0;
 
         this.conveyor = this.game.add.sprite(this.game.world.centerX + 50, 560, 'conveyor');
-
-		parent of ff5248b... Add conveyor image
         this.coins = this.add.group();
         this.boxes = this.add.group();
         this.enemyBuffer = this.add.group();
@@ -66,9 +63,9 @@ BaseNamespace.Game.prototype = {
         this.coinSound = this.add.audio('coinSFX');
         this.hurtSound = this.add.audio('hurtSFX');
 
-        this.conveyor = this.game.add.sprite(this.game.world.centerX + 60, 565, 'conveyor');
         this.conveyor.anchor.setTo(0.5, 0.5);
         this.physics.enable(this.conveyor, Phaser.Physics.ARCADE);
+        this.conveyor.body.setSize(756, 42);
         this.conveyor.body.allowGravity = false;
         this.conveyor.body.immovable = true;
 		
@@ -425,7 +422,7 @@ BaseNamespace.Game.prototype = {
 
         this.physics.arcade.overlap(player, this.coins, this.coinGrab, null, this);
 
-        this.boxes.callAll('boxUpdate', null, this.conveyor.body.x);
+        this.boxes.callAll('boxUpdate', null, this.conveyor.body.x + 10);
         this.enemies.callAll('enemyUpdate', null, this);
         var en = this.enemyBuffer.children.length;
         while (en--) {
