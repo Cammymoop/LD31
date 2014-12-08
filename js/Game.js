@@ -36,6 +36,9 @@ BaseNamespace.Game.prototype = {
         this.muteToggle = 0;
 
         this.conveyor = this.game.add.sprite(this.game.world.centerX + 50, 560, 'conveyor');
+        this.conveyor.animations.add('run');
+        this.conveyor.animations.play('run', 27, true);
+
         this.coins = this.add.group();
         this.boxes = this.add.group();
         this.enemyBuffer = this.add.group();
