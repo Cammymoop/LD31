@@ -29,6 +29,12 @@ BaseNamespace.Game.prototype = {
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.physics.arcade.gravity.y = 1400;
 
+        this.music = this.add.audio('bgMusic', 1, true);
+        this.music.play('', 0, 0.8, true);
+
+        this.mutePushed = false;
+        this.muteToggle = 0;
+
         this.conveyor = this.game.add.sprite(this.game.world.centerX + 50, 560, 'conveyor');
         this.coins = this.add.group();
         this.boxes = this.add.group();
@@ -231,6 +237,7 @@ BaseNamespace.Game.prototype = {
         this.keys = {
             'jump': this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
             'C': this.input.keyboard.addKey(Phaser.Keyboard.C),
+            'M': this.input.keyboard.addKey(Phaser.Keyboard.M),
             'R': this.input.keyboard.addKey(Phaser.Keyboard.R)
         };
 
@@ -372,6 +379,14 @@ BaseNamespace.Game.prototype = {
 
 	update: function () {
         "use strict";
+        if (!this.mutePushed && this.keys.M.isDown) {
+            this.mutePushed = true;
+            this.sound.mute = this.sound.mute ? false : true;
+        }
+
+        if (!this.keys.M.isDown) {
+            this.mutePushed = false;
+        }
         var player = this.player;
 
         if (player.exists) {
@@ -503,6 +518,7 @@ BaseNamespace.Game.prototype = {
 
     reset: function () {
         "use strict";
+        this.music.stop();
         this.game.state.start('Game');
     },
 

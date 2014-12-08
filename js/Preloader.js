@@ -24,6 +24,8 @@ BaseNamespace.Preloader.prototype = {
 
         this.game.load.audio('coinSFX', ['sfx/coin.mp3', 'sfx/coin.ogg']);
         this.game.load.audio('hurtSFX', ['sfx/hurt.mp3', 'sfx/hurt.ogg']);
+
+        this.game.load.audio('bgMusic', ['sfx/ludumEdited.mp3', 'sfx/ludumEdited.ogg']);
 	},
 
 	create: function () {
