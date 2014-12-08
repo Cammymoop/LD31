@@ -35,7 +35,7 @@ BaseNamespace.Game.prototype = {
         this.mutePushed = false;
         this.muteToggle = 0;
 
-        this.conveyor = this.game.add.sprite(this.game.world.centerX + 50, 560, 'conveyor');
+        this.conveyor = this.game.add.sprite(this.game.world.centerX + 50, 561, 'conveyor');
         this.conveyor.animations.add('run');
         this.conveyor.animations.play('run', 27, true);
 
@@ -62,6 +62,11 @@ BaseNamespace.Game.prototype = {
         this.gameOverText.x -= Math.round(this.gameOverText.width/2);
         this.gameOverText.y -= Math.round(this.gameOverText.height/2);
         this.gameOverText.visible = false;
+
+        this.successText = this.add.text(400, 300, '      Success!\npress R to restart', {font: "30pt Georgia, Ariel", fill: "#009000", stroke: "#003000", strokeThickness: 5});
+        this.successText.x -= Math.round(this.gameOverText.width/2);
+        this.successText.y -= Math.round(this.gameOverText.height/2);
+        this.successText.visible = false;
 
         this.coinSound = this.add.audio('coinSFX');
         this.hurtSound = this.add.audio('hurtSFX');
@@ -160,12 +165,38 @@ BaseNamespace.Game.prototype = {
 		this.addCoin (addBoxOffset, 320);
 		this.addCoin (addBoxOffset, 280);
 		this.addCoin (addBoxOffset, 240);
-
-		this.addStack (addBoxOffset + 240, ['smallBox', 'scaffold', 'box1', 'box1']);
-
 		//end of trial code
 
-        addBoxOffset += 900;
+        addBoxOffset += 200;
+        //this.sound.mute = true;
+        //var addBoxOffset = 600;
+        this.addStack(addBoxOffset, ['smallBox']);
+        addBoxOffset += 40;
+        this.addStarball(addBoxOffset, 500);
+        addBoxOffset += 40;
+        this.addStarball(addBoxOffset, 500);
+        addBoxOffset += 40;
+        this.addStarball(addBoxOffset, 500);
+        addBoxOffset += 40;
+        this.addStarball(addBoxOffset, 500);
+        this.addStack(addBoxOffset, ['scaffold', 'smallBox']);
+        addBoxOffset += 40;
+        this.addStarball(addBoxOffset, 500);
+        addBoxOffset += 40;
+        this.addStarball(addBoxOffset, 500);
+        addBoxOffset += 40;
+        this.addStarball(addBoxOffset, 500);
+        addBoxOffset += 40;
+        this.addStarball(addBoxOffset, 500);
+        this.addStack(addBoxOffset, ['scaffold', 'smallBox']);
+        addBoxOffset += 40;
+        this.addStarball(addBoxOffset, 500);
+        addBoxOffset += 40;
+        this.addStarball(addBoxOffset, 500);
+        addBoxOffset += 40;
+        this.addStarball(addBoxOffset, 500);
+
+        addBoxOffset += 80;
         this.addCoin(addBoxOffset, 500);
         addBoxOffset += 80;
         this.addStack(addBoxOffset, ['smallBox']);
@@ -179,10 +210,13 @@ BaseNamespace.Game.prototype = {
             if (!i2) {
                 this.addCoin(addBoxOffset, 500);
             }
+            if (i2 >= 4) {
+                this.addStarball(addBoxOffset, 340);
+            }
         }
         addBoxOffset += 40;
         this.addStack(addBoxOffset, ['smallScaffold', 'smallScaffold', 'smallScaffold', 'smallBox', 'scaffold', 'smallBox']);
-        this.addCoin(addBoxOffset, 200);
+        this.addCoin(addBoxOffset, 300);
 
         addBoxOffset += 280;
         this.addStack(addBoxOffset, ['smallScaffold', 'smallScaffold', 'smallScaffold', 'smallBox', 'box1', 'box1', 'box1']);
@@ -216,14 +250,14 @@ BaseNamespace.Game.prototype = {
             12: ['scaffold', 'smallBox'],
             22: ['scaffold', 'smallBox', 'box1', 'smallBox'],
         };
-        for (var i = 0; i < 23; i++) {
-            if (i in different) {
-                stack = different[i];
+        for (var i3 = 0; i3 < 23; i3++) {
+            if (i3 in different) {
+                stack = different[i3];
             } else {
                 stack = ['scaffold', 'smallBox', 'scaffold', 'smallBox'];
             }
             this.addStack(addBoxOffset, stack);
-            if (i > 1 && i < 22) {
+            if (i3 > 1 && i3 < 22) {
                 this.addCoin(addBoxOffset, 400);
             }
             addBoxOffset += 40;
@@ -231,6 +265,33 @@ BaseNamespace.Game.prototype = {
 
         addBoxOffset += 120;
         this.addCoin(addBoxOffset, 400);
+
+        addBoxOffset += 120;
+        this.addStack(addBoxOffset, ['scaffold', 'smallBox']);
+        this.addCoin(addBoxOffset, 410);
+        addBoxOffset += 40;
+        this.addStack(addBoxOffset, ['scaffold', 'scaffold', 'smallBox']);
+        this.addCoin(addBoxOffset, 320);
+        addBoxOffset += 40;
+        this.addStack(addBoxOffset, ['box1', 'scaffold', 'scaffold', 'smallBox']);
+        addBoxOffset += 40;
+        for (var i4 = 0; i4 < 13; i4++) {
+            this.addCoin(addBoxOffset, 500);
+            if (i4 !== 4) {
+                this.addStarball(addBoxOffset, 460);
+            }
+            this.addStack(addBoxOffset, ['scaffold', 'scaffold', 'scaffold', 'smallBox']);
+            addBoxOffset += 40;
+        }
+
+        this.addCoin(addBoxOffset + 160, 360);
+
+        addBoxOffset += 600;
+        this.endTrigger = this.add.sprite(addBoxOffset, 0, 'player');
+        this.endTrigger.frame = 1;
+        this.physics.enable(this.endTrigger, Phaser.Physics.ARCADE);
+        this.endTrigger.body.allowGravity = false;
+        this.endTrigger.body.velocity.x = -90;
 
         this.addCoin(122, 28, false);
         this.addCoin(765, 500, false);
@@ -372,7 +433,7 @@ BaseNamespace.Game.prototype = {
             }
 
             if (this.y > 650) {
-                this.body.enable = false;
+                this.exists = false;
             }
         };
         box.collides = collides[image];
@@ -403,15 +464,19 @@ BaseNamespace.Game.prototype = {
 
             if (player.invincible) {
                 if (this.time.now - player.blinkInterval > player.blinkTime) {
-                    player.visible = player.visible ? false : true;
+                    player.frame = player.frame === 0 ? 1 : 0;
                     player.blinkTime = this.time.now;
                 }
 
                 if (this.time.now - 1200 > player.lastHit) {
                     player.invincible = false;
-                    player.visible = true;
+                    player.frame = 0;
                 }
             }
+        }
+
+        if (this.endTrigger.x < 600) {
+            this.success();
         }
 
         this.conveyorMove = [];
@@ -455,7 +520,7 @@ BaseNamespace.Game.prototype = {
             }
 
             if (player.y > 800) {
-                this.hurtSound.play()
+                this.hurtSound.play();
                 this.die();
             }
         }
@@ -497,6 +562,16 @@ BaseNamespace.Game.prototype = {
         this.player.exists = false;
         this.player.invincible = false;
         this.gameOver();
+    },
+
+    success: function () {
+        "use strict";
+        this.player.exists = false;
+        this.player.invincible = false;
+        this.successText.visible = true;
+        this.successText.text = '        Success!\nYou got ' +
+            this.score + '/' + this.coins.length + ' coins' +
+            '\n press R to play again';
     },
 
     coinGrab: function (player, coin) {
