@@ -6,6 +6,11 @@ BaseNamespace.Boot = function (game) {
 };
 
 BaseNamespace.Boot.prototype = {
+    preload: function () {
+        "use strict";
+        this.load.image('loadingBar', 'img/loadingBar.png');
+    },
+
 	create: function () {
         "use strict";
 		this.game.input.maxPointers = 1;
@@ -27,6 +32,7 @@ BaseNamespace.Boot.prototype = {
 		    this.game.stage.scale.pageAlignHorizontally = true;
 		    this.game.stage.scale.setScreenSize(true);
 	    }
+
         this.game.state.add('Preloader', BaseNamespace.Preloader);
         this.game.state.add('Game', BaseNamespace.Game);
 

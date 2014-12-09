@@ -32,11 +32,17 @@ BaseNamespace.Preloader.prototype = {
         this.game.load.audio('hurtSFX', ['sfx/hurt.mp3', 'sfx/hurt.ogg']);
 
         this.game.load.audio('bgMusic', ['sfx/ludumEdited.mp3', 'sfx/ludumEdited.ogg']);
+
+        this.loadingBar = this.add.sprite(400, 300, 'loadingBar');
+        this.loadingBar.anchor.setTo(0.5, 0.5);
+
+        this.load.setPreloadSprite(this.loadingBar);
     },
 
     create: function () {
         "use strict";
         this.game.musicMute = false;
+        this.loadingBar.visible = false;
 
         this.add.sprite(0, 0, 'title');
         this.soundIcon = this.add.sprite(12, 548, 'soundOn');
