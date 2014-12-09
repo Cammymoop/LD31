@@ -30,7 +30,7 @@ BaseNamespace.Game.prototype = {
         this.physics.arcade.gravity.y = 1400;
 
         this.music = this.add.audio('bgMusic', 1, true);
-        this.music.play('', 0, 0.8, true);
+        this.music.play('', 0, this.game.musicMute ? 0 : 0.8, true);
 
         this.mutePushed = false;
         this.muteToggle = 0;
@@ -49,6 +49,8 @@ BaseNamespace.Game.prototype = {
         this.physics.enable(this.player, Phaser.Physics.ARCADE);
         this.player.body.setSize(26, 59, 0, 10);
         this.player.velocityControl = true;
+
+        this.soundIcon = this.add.sprite(12, 548, this.sound.mute ? 'muted' : (this.game.musicMute ? 'noMusic' : 'soundOn'));
 
         this.player.health = 3;
         this.player.invincible = false;
@@ -168,8 +170,6 @@ BaseNamespace.Game.prototype = {
 		//end of trial code
 
         addBoxOffset += 200;
-        //this.sound.mute = true;
-        //var addBoxOffset = 600;
         this.addStack(addBoxOffset, ['smallBox']);
         addBoxOffset += 40;
         this.addStarball(addBoxOffset, 500);
@@ -445,7 +445,19 @@ BaseNamespace.Game.prototype = {
         "use strict";
         if (!this.mutePushed && this.keys.M.isDown) {
             this.mutePushed = true;
-            this.sound.mute = this.sound.mute ? false : true;
+            if (this.sound.mute) {
+                this.sound.mute = false;
+                this.soundIcon.loadTexture('soundOn');
+            } else if (this.game.musicMute) {
+                this.sound.mute = true;
+                this.music.volume = 0.8;
+                this.game.musicMute = false;
+                this.soundIcon.loadTexture('muted');
+            } else {
+                this.music.volume = 0;
+                this.game.musicMute = true;
+                this.soundIcon.loadTexture('noMusic');
+            }
         }
 
         if (!this.keys.M.isDown) {
@@ -473,10 +485,10 @@ BaseNamespace.Game.prototype = {
                     player.frame = 0;
                 }
             }
-        }
 
-        if (this.endTrigger.x < 600) {
-            this.success();
+            if (this.endTrigger.x < 600) {
+                this.success();
+            }
         }
 
         this.conveyorMove = [];
