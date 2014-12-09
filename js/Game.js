@@ -283,8 +283,29 @@ BaseNamespace.Game.prototype = {
             this.addStack(addBoxOffset, ['scaffold', 'scaffold', 'scaffold', 'smallBox']);
             addBoxOffset += 40;
         }
-
         this.addCoin(addBoxOffset + 160, 360);
+
+        addBoxOffset += 320;
+        for (var s = 0; s < 8; s++) {
+            if (s < 2 || s > 3) {
+                this.addStarball(addBoxOffset, 500 - (s * 40));
+            }
+        }
+        this.addCoin(addBoxOffset, 400);
+
+        addBoxOffset += 160;
+        for (s = 0; s < 8; s++) {
+            if (s > 2) {
+                this.addStarball(addBoxOffset, 520 - (s * 42));
+                this.addStarball(addBoxOffset + 100, 520 - (s * 42));
+            }
+            if (!s) {
+                this.addStarball(addBoxOffset + 45, 520);
+            }
+        }
+        this.addCoin(addBoxOffset, 460);
+        this.addCoin(addBoxOffset + 45, 400);
+        this.addCoin(addBoxOffset + 100, 460);
 
         addBoxOffset += 600;
         this.endTrigger = this.add.sprite(addBoxOffset, 0, 'player');
